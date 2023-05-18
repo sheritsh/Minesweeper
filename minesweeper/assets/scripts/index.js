@@ -1,7 +1,7 @@
 /* created by sheritsh // Oleg Polovinko ※ RS School / School 21, Kzn  */
 
 class MinesweeperGame {
-  constructor() {
+  constructor(domElement) {
     // fields
     this.x_size = 10;
     this.y_size = 10;
@@ -19,7 +19,7 @@ class MinesweeperGame {
     this.gameField.classList.add('field');
 
     //
-    document.body.append(this.gameBoard);
+    domElement.append(this.gameBoard);
     this.gameBoard.append(this.gameHeader);
     this.gameBoard.append(this.gameField);
   }
@@ -34,9 +34,12 @@ class MinesweeperGame {
   }
 }
 
+const gameWrapper = document.createElement('div');
+gameWrapper.classList.add('wrapper');
+document.body.append(gameWrapper);
 const gameTitle = document.createElement('h1');
 gameTitle.textContent = 'Minesweeper';
-document.body.append(gameTitle);
+gameWrapper.append(gameTitle);
 
-const game = new MinesweeperGame();
+const game = new MinesweeperGame(gameWrapper);
 game.fillField();
