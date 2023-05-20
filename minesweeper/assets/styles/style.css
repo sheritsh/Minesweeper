@@ -9,6 +9,11 @@ license (http://creativecommons.org/licenses/by-sa/3.0/). */
   src: url(../fonts/mine-sweeper.otf);
 }
 
+@font-face {
+  font-family: digital-regular;
+  src: url(../fonts/Digital-7_400.ttf);
+}
+
 /* FONTS INCLUDE END */
 
 /* MINESWEEPER ELEMENTS START */
@@ -60,7 +65,106 @@ h1 {
   border-bottom: 5px solid #ffffff;
   border-left: 5px solid #808080;
   height: 10vh;
+  min-height: 100px;
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-family: digital-regular;
+  font-size: 32px;
+  text-align: center;
+}
+
+.mines-left {
+  position: relative;
+  width: 80px;
+  height: 30px;
+  color: red;
+  background-color: #2e2e2edd;
+}
+
+.mines-left::before {
+  position: absolute;
+  color: black;
+  font-size: 14px;
+  top: -90%;
+  left: 50%;
+  transform: translateX(-50%);
+  content: 'mines left';
+}
+
+.moves-counter {
+  position: relative;
+  width: 80px;
+  height: 30px;
+  background-color: #2e2e2e79;
+}
+
+.moves-counter::before {
+  position: absolute;
+  font-size: 14px;
+  top: -90%;
+  left: 50%;
+  transform: translateX(-50%);
+  content: 'turns counter';
+}
+
+.game-status {
+  width: 80px;
+  height: 80px;
+  border-top: 4px solid #ffffff;
+  border-left: 4px solid #ffffff;
+  border-bottom: 4px solid #808080;
+  border-right: 4px solid #808080;
+  background-color: #efd819;
+  background-image: url(../images/normal.png);
+  background-size: cover;
+}
+
+.game-status:active {
+  border-bottom: 4px solid #808080;
+  border-right: 4px solid #808080;
+  border-top: 4px solid #808080;
+  border-left: 4px solid #808080;
+  transform: scale(0.85);
+}
+
+.timer {
+  position: relative;
+  width: 80px;
+  height: 30px;
+  background-color: #2e2e2edd;
+  color: red;
+  font-size: 32px;
+}
+
+.timer::before {
+  position: absolute;
+  color: black;
+  font-size: 14px;
+  top: -60%;
+  left: 50%;
+  transform: translateX(-50%);
+  content: 'duration';
+}
+
+.settings {
+  width: 60px;
+  height: 60px;
+  border-top: 4px solid #ffffff;
+  border-left: 4px solid #ffffff;
+  border-bottom: 4px solid #808080;
+  border-right: 4px solid #808080;
+  background-image: url(../images/settings.svg);
+  background-size: cover;
+}
+
+.settings:active {
+  border-bottom: 4px solid #808080;
+  border-right: 4px solid #808080;
+  border-top: 4px solid #808080;
+  border-left: 4px solid #808080;
+  transform: scale(0.85);
 }
 
 .field {
@@ -69,6 +173,7 @@ h1 {
   border-bottom: 5px solid #ffffff;
   border-left: 5px solid #808080;
   height: 50vh;
+  min-height: 400px;
   max-height: 570px;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
@@ -87,8 +192,8 @@ h1 {
   background-color: #c6c6c6;
   /* position: relative; */
   overflow: hidden;
-  font-family: minesweeper-regular;
-  font-size: min(2vw, 32px);
+  /* font-family: minesweeper-regular;
+  font-size: min(2vw, 32px); */
 }
 
 .cell:active {
@@ -223,12 +328,19 @@ h1 {
 .cell-clicked {
   background-color: #c6c6c6;
   border: 1px solid #858585;
+  font-family: minesweeper-regular;
+  font-size: min(2vw, 32px);
 }
 
 .cell-flag {
+  border-top: 4px solid #ffffff;
+  border-left: 4px solid #ffffff;
+  border-bottom: 4px solid #808080;
+  border-right: 4px solid #808080;
+  overflow: hidden;
   width: 100%;
   height: 100%;
-  background: url(../images/flag.svg) no-repeat;
+  background: url(../images/flag.svg) no-repeat, #c6c6c6;
   background-size: contain;
   background-position: center;
 }

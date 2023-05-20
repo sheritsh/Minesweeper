@@ -10,10 +10,10 @@ class MinesweeperGame {
     // fields
     this.x_size = 10;
     this.y_size = 10;
-    this.timerCounter = 0;
+    this.timerCounter = 1;
     this.turnsCounter = 0;
     this.bombsAmount = 10;
-    this.bombsLeftCounter = 0;
+    this.bombsLeftCounter = this.bombsAmount;
     this.flagsCounter = 0;
     this.gameSize = this.x_size * this.y_size;
     this.gameArray = [];
@@ -24,13 +24,37 @@ class MinesweeperGame {
     this.gameBoard.classList.add('board');
     this.gameHeader = document.createElement('div');
     this.gameHeader.classList.add('header');
+    this.minesLeftDisplay = document.createElement('div');
+    this.minesLeftDisplay.classList.add('mines-left');
+    this.minesLeftDisplay.innerHTML = this.bombsLeftCounter;
+    this.movesCounterDisplay = document.createElement('div');
+    this.movesCounterDisplay.classList.add('moves-counter');
+    this.movesCounterDisplay.innerHTML = this.turnsCounter;
+    this.gameStatusDisplay = document.createElement('div');
+    this.gameStatusDisplay.classList.add('game-status');
+    this.timerDisplay = document.createElement('div');
+    this.timerDisplay.classList.add('timer');
+    this.createTimer();
+    this.settingsDisplay = document.createElement('div');
+    this.settingsDisplay.classList.add('settings');
     this.gameField = document.createElement('div');
     this.gameField.classList.add('field');
 
     //
     domElement.append(this.gameBoard);
     this.gameBoard.append(this.gameHeader);
+    this.gameHeader.append(this.minesLeftDisplay);
+    this.gameHeader.append(this.movesCounterDisplay);
+    this.gameHeader.append(this.gameStatusDisplay);
+    this.gameHeader.append(this.timerDisplay);
+    this.gameHeader.append(this.settingsDisplay);
     this.gameBoard.append(this.gameField);
+    this.fillField();
+  }
+
+  createTimer() {
+    setInterval(() => (this.timerDisplay.innerHTML = this.timerCounter), 1000);
+    setInterval(() => this.timerCounter++, 1000);
   }
 
   initializeArray() {
@@ -65,7 +89,9 @@ class MinesweeperGame {
     return bombsAroundCounter;
   }
 
-  openEmptyNeigbors(cellId) {
+  openAdjacentEmptyCells(cellId) {
+    const curCell = document.getElementById(cellId.toString());
+    if (curCell.classList.contains('cell-clicked')) return;
     const cellColumn = Math.floor(cellId % this.x_size);
     const cellRow = Math.floor(cellId / this.x_size);
 
@@ -75,29 +101,44 @@ class MinesweeperGame {
         if (j < 0 || j > this.x_size - 1) continue;
         if (i === cellRow && j === cellColumn) continue;
         if (this.gameArray[i][j] === '0' && this.getNeigborsBombsCount(cellId) === 0) {
-          const curCell = document.getElementById(cellId.toString());
           const curId = i * this.x_size + j;
           curCell.classList.add('cell-clicked');
-          // this.openEmptyNeigbors(curId);
-          // setTimeout(() => {
-          //   this.openEmptyNeigbors(curId);
-          // }, 1000);
+          curCell.classList.remove('cell-flag');
+          curCell.classList.remove('cell');
+          this.openAdjacentEmptyCells(curId);
+          this.revealCell(curId);
         }
       }
     }
   }
 
-  revealCell(event) {
-    const clickedCell = event.target;
+  revealCell(id, event) {
+    console.log(id);
+    let clickedCell;
+    if (id === null) {
+      clickedCell = event.target;
+    } else {
+      clickedCell = document.getElementById(id.toString());
+    }
+    // if (clickedCell.classList.contains('cell-flag')) return;
+
     const clickedCellId = clickedCell.getAttribute('id');
     const cellColumn = Math.floor(clickedCellId % this.x_size);
     const cellRow = Math.floor(clickedCellId / this.x_size);
 
     if (this.gameArray[cellRow][cellColumn] === 'b') {
       clickedCell.classList.add('cell-bomb');
+      alert('Game over');
+      // TO DO: GAME OVER;
     } else {
       // clickedCell.classList.add('cell-clicked');
-      switch (this.getNeigborsBombsCount(clickedCellId)) {
+      const bombsAroundConter = this.getNeigborsBombsCount(clickedCellId);
+      if (bombsAroundConter > 0) {
+        clickedCell.classList.remove('cell-flag');
+        clickedCell.classList.add('cell-clicked');
+        clickedCell.classList.remove('cell');
+      }
+      switch (bombsAroundConter) {
         case 1:
           clickedCell.classList.add('cell-one');
           break;
@@ -123,10 +164,12 @@ class MinesweeperGame {
           clickedCell.classList.add('cell-eight');
           break;
         default:
-          this.openEmptyNeigbors(clickedCellId);
+          this.openAdjacentEmptyCells(clickedCellId);
           break;
       }
     }
+
+    // TO DO: check state (flags and bombs to win) SET TIMER TO FIRST MOVE
   }
 
   fillField() {
@@ -135,11 +178,16 @@ class MinesweeperGame {
       cell.classList.add('cell');
       cell.setAttribute('id', i.toString());
       cell.addEventListener('click', (event) => {
-        this.revealCell(event);
+        if (!cell.classList.contains('cell-flag')) {
+          this.revealCell(null, event);
+        }
       });
-      cell.addEventListener('contextmenu', (event) => {
+      cell.addEventListener('contextmenu', function rightClickHandler(event) {
         event.preventDefault();
-        cell.classList.add('cell-flag');
+        if (!cell.classList.contains('cell-clicked')) {
+          cell.classList.toggle('cell-flag');
+          cell.classList.toggle('cell');
+        }
         // TO DO: function to handle flag placement
       });
       this.gameField.append(cell);
@@ -172,5 +220,5 @@ gameTitle.textContent = 'Minesweeper';
 gameWrapper.append(gameTitle);
 
 const game = new MinesweeperGame(gameWrapper);
-game.fillField();
+// game.fillField();
 // game.generateGameAray();
