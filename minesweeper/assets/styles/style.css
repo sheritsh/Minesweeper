@@ -1,6 +1,13 @@
 /* FONTS INCLUDE START */
 
-/* alegreya-sans-sc-regular - latin */
+/*
+The FontStruction “MINE-SWEEPER” (https://fontstruct.com/fontstructions/show/1501665)
+by Gangetsha Lyx is licensed under a Creative Commons Attribution Share Alike
+license (http://creativecommons.org/licenses/by-sa/3.0/). */
+@font-face {
+  font-family: minesweeper-regular;
+  src: url(../fonts/mine-sweeper.otf);
+}
 
 /* FONTS INCLUDE END */
 
@@ -35,7 +42,7 @@ h1 {
 .board {
   margin: 0 auto;
   background-color: #c6c6c6;
-  width: 60vw;
+  width: 80vw;
   max-width: 650px;
   max-height: 750px;
   padding: 10px;
@@ -78,7 +85,10 @@ h1 {
   width: 100%;
   height: 100%;
   background-color: #c6c6c6;
-  position: relative;
+  /* position: relative; */
+  overflow: hidden;
+  font-family: minesweeper-regular;
+  font-size: min(2vw, 32px);
 }
 
 .cell:active {
@@ -89,13 +99,138 @@ h1 {
   border-right: none;
 }
 
-.cell::after {
-  color: white;
+/* .cell::after {
+  content: '1';
   position: absolute;
-  content: '';
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+} */
+
+.cell-one {
+  color: #0100ff;
+  position: relative;
+}
+
+.cell-one::after {
+  content: '1';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cell-two {
+  color: #038100;
+  position: relative;
+}
+
+.cell-two::after {
+  content: '2';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cell-three {
+  color: #fe0300;
+  position: relative;
+}
+
+.cell-three::after {
+  content: '3';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cell-four {
+  color: #000083;
+  position: relative;
+}
+
+.cell-four::after {
+  content: '4';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cell-five {
+  color: #850001;
+  position: relative;
+}
+
+.cell-five::after {
+  content: '5';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cell-six {
+  color: #018284;
+  position: relative;
+}
+
+.cell-six::after {
+  content: '6';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cell-seven {
+  color: #850084;
+  position: relative;
+}
+
+.cell-seven::after {
+  content: '7';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cell-eight {
+  color: #757575;
+  position: relative;
+}
+
+.cell-eight::after {
+  content: '8';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cell-bomb {
+  width: 100%;
+  height: 100%;
+  background-color: red;
+  background: url(../images/mine.svg) no-repeat, #ff0200;
+  background-size: contain;
+  background-position: center;
+}
+
+.cell-clicked {
+  background-color: #c6c6c6;
+  border: 1px solid #858585;
+}
+
+.cell-flag {
+  width: 100%;
+  height: 100%;
+  background: url(../images/flag.svg) no-repeat;
+  background-size: contain;
+  background-position: center;
 }
 
 /* MINESWEEPER ELEMENTS END */
