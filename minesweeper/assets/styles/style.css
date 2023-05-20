@@ -129,6 +129,37 @@ h1 {
   transform: scale(0.85);
 }
 
+.game-status-died {
+  width: 80px;
+  height: 80px;
+  border-top: 4px solid #ffffff;
+  border-left: 4px solid #ffffff;
+  border-bottom: 4px solid #808080;
+  border-right: 4px solid #808080;
+  background-color: #efd819;
+  background-image: url(../images/loose.png);
+  background-size: cover;
+  position: relative;
+}
+
+.game-status-died:active {
+  border-bottom: 4px solid #808080;
+  border-right: 4px solid #808080;
+  border-top: 4px solid #808080;
+  border-left: 4px solid #808080;
+  transform: scale(0.85);
+}
+
+.game-status-died::after {
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  color: red;
+  content: 'ПОМЕР';
+}
+
 .timer {
   position: relative;
   width: 80px;
