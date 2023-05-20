@@ -5,6 +5,46 @@ function getRandInt(min, max) {
   return Math.floor(rand);
 }
 
+function clickSound(isSoundOn) {
+  const clickSound = new Audio();
+  clickSound.preload = 'auto';
+  clickSound.src = 'assets/sounds/click.wav';
+  clickSound.volume = 0.1;
+  if (isSoundOn) {
+    clickSound.play();
+  }
+}
+
+function startSound(isSoundOn) {
+  const startSound = new Audio();
+  startSound.preload = 'auto';
+  startSound.src = 'assets/sounds/start.wav';
+  startSound.volume = 0.1;
+  if (isSoundOn) {
+    startSound.play();
+  }
+}
+
+function winSound(isSoundOn) {
+  const winSound = new Audio();
+  winSound.preload = 'auto';
+  winSound.src = 'assets/sounds/win.wav';
+  winSound.volume = 0.3;
+  if (isSoundOn) {
+    winSound.play();
+  }
+}
+
+function loseSound(isSoundOn) {
+  const loseSound = new Audio();
+  loseSound.preload = 'auto';
+  loseSound.src = 'assets/sounds/lose.wav';
+  loseSound.volume = 0.5;
+  if (isSoundOn) {
+    loseSound.play();
+  }
+}
+
 class MinesweeperGame {
   constructor(domElement) {
     // fields
@@ -19,6 +59,7 @@ class MinesweeperGame {
     this.gameArray = [];
     this.isPlayable = true;
     this.isInitialized = false;
+    this.isSound = true;
     this.initializeArray();
     // generate initial page elements
     this.gameBoard = document.createElement('div');
@@ -129,6 +170,9 @@ class MinesweeperGame {
     let clickedCell;
     if (id === null) {
       clickedCell = event.target;
+      setTimeout(() => {
+        if (this.isPlayable) clickSound(this.isSound);
+      }, 100);
     } else {
       clickedCell = document.getElementById(id.toString());
     }
@@ -254,6 +298,7 @@ class MinesweeperGame {
   }
 
   newGame() {
+    startSound(this.isSound);
     this.timerCounter = 0;
     this.turnsCounter = 0;
     this.flagsCounter = 0;
@@ -300,12 +345,14 @@ class MinesweeperGame {
   }
 
   gameWin() {
+    winSound(this.isSound);
     this.isPlayable = false;
     this.gameStatusDisplay.classList.remove('game-status');
     this.gameStatusDisplay.classList.add('game-status-win');
   }
 
   gameOver() {
+    loseSound(this.isSound);
     this.isPlayable = false;
     this.gameStatusDisplay.classList.remove('game-status');
     this.gameStatusDisplay.classList.add('game-status-died');
