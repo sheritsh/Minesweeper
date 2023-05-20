@@ -170,9 +170,6 @@ class MinesweeperGame {
     let clickedCell;
     if (id === null) {
       clickedCell = event.target;
-      setTimeout(() => {
-        if (this.isPlayable) clickSound(this.isSound);
-      }, 100);
     } else {
       clickedCell = document.getElementById(id.toString());
     }
@@ -183,7 +180,14 @@ class MinesweeperGame {
     }
 
     // if (clickedCell.classList.contains('cell-flag')) return;
-    if (event && !clickedCell.classList.contains('cell-clicked')) this.turnsCounter++;
+    if (event && !clickedCell.classList.contains('cell-clicked')) {
+      this.turnsCounter++;
+      if (id === null) {
+        setTimeout(() => {
+          if (this.isPlayable) clickSound(this.isSound);
+        }, 50);
+      }
+    }
     const clickedCellId = clickedCell.getAttribute('id');
     const cellColumn = Math.floor(clickedCellId % this.x_size);
     const cellRow = Math.floor(clickedCellId / this.x_size);
