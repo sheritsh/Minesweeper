@@ -273,6 +273,7 @@ class MinesweeperGame {
         }
         // TO DO: function to handle flag placement
       });
+
       this.gameField.append(cell);
     }
   }
