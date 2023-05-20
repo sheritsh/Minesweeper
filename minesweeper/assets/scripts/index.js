@@ -10,7 +10,7 @@ class MinesweeperGame {
     // fields
     this.x_size = 10;
     this.y_size = 10;
-    this.timerCounter = 1;
+    this.timerCounter = 0;
     this.turnsCounter = 0;
     this.bombsAmount = 10;
     this.bombsLeftCounter = this.bombsAmount;
@@ -58,7 +58,9 @@ class MinesweeperGame {
 
   createTimer() {
     setInterval(() => (this.timerDisplay.innerHTML = this.timerCounter), 1000);
-    setInterval(() => this.timerCounter++, 1000);
+    setInterval(() => {
+      if (this.isPlayable) this.timerCounter++;
+    }, 1000);
   }
 
   initializeArray() {
@@ -176,10 +178,11 @@ class MinesweeperGame {
 
     // TO DO: check state (flags and bombs to win) SET TIMER TO FIRST MOVE
     this.updateState();
+    this.checkEnd();
   }
 
   updateState() {
-    this.minesLeftDisplay.innerHTML = this.bombsLeftCounter;
+    this.minesLeftDisplay.innerHTML = this.bombsLeftCounter - this.flagsCounter;
     this.movesCounterDisplay.innerHTML = this.turnsCounter;
   }
 
@@ -198,6 +201,12 @@ class MinesweeperGame {
         if (!cell.classList.contains('cell-clicked') && this.isPlayable) {
           cell.classList.toggle('cell-flag');
           cell.classList.toggle('cell');
+          if (cell.classList.contains('cell-flag')) {
+            this.flagsCounter++;
+          } else {
+            this.flagsCounter--;
+          }
+          this.updateState();
         }
         // TO DO: function to handle flag placement
       });
@@ -234,8 +243,33 @@ class MinesweeperGame {
     this.gameField.innerHTML = '';
     this.fillField();
     this.gameStatusDisplay.classList.remove('game-status-died');
+    this.gameStatusDisplay.classList.remove('game-status-win');
     this.gameStatusDisplay.classList.add('game-status');
     this.updateState();
+  }
+
+  checkEnd() {
+    let clickedToWin = this.gameSize - this.bombsAmount;
+    let nowFlags = 0;
+    console.log('To win: ' + clickedToWin);
+
+    for (let i = 0; i < this.y_size; i++) {
+      for (let j = 0; j < this.x_size; j++) {
+        const currentid = i * this.x_size + j;
+        const currentCell = document.getElementById(currentid.toString());
+        if (currentCell.classList.contains('cell-clicked')) {
+          clickedToWin--;
+        }
+      }
+    }
+    console.log('now to win: ' + clickedToWin);
+    if (clickedToWin === 0) this.gameWin();
+  }
+
+  gameWin() {
+    this.isPlayable = false;
+    this.gameStatusDisplay.classList.remove('game-status');
+    this.gameStatusDisplay.classList.add('game-status-win');
   }
 
   gameOver() {
