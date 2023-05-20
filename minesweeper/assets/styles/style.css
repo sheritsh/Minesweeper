@@ -93,6 +93,24 @@ h1 {
   content: 'mines left';
 }
 
+.flags-placed {
+  position: relative;
+  width: 80px;
+  height: 30px;
+  color: red;
+  background-color: #2e2e2edd;
+}
+
+.flags-placed::before {
+  position: absolute;
+  color: black;
+  font-size: 14px;
+  top: -90%;
+  left: 50%;
+  transform: translateX(-50%);
+  content: 'flags placed';
+}
+
 .moves-counter {
   position: relative;
   width: 80px;
