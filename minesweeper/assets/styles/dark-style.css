@@ -77,10 +77,10 @@ h1 {
   max-width: 650px;
   max-height: 750px;
   padding: 10px;
-  border-top: 4px solid #ffffff;
-  border-left: 4px solid #ffffff;
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
+  border-top: 4px solid #43eb99;
+  border-left: 4px solid #43eb99;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
   font-size: min(2vw, 32px);
   /* overflow: hidden; */
 }
@@ -145,20 +145,20 @@ h1 {
   max-height: 400px;
   padding-top: 30px;
   background-color: #c0c0c0;
-  border-top: 5px solid #808080;
-  border-right: 5px solid #ffffff;
-  border-bottom: 5px solid #ffffff;
-  border-left: 5px solid #808080;
+  border-top: 5px solid #861be2;
+  border-right: 5px solid #43eb99;
+  border-bottom: 5px solid #43eb99;
+  border-left: 5px solid #861be2;
   font-size: min(18px, 2vw);
   z-index: 10;
 }
 
 .header {
   background-color: #c0c0c0;
-  border-top: 5px solid #808080;
-  border-right: 5px solid #ffffff;
-  border-bottom: 5px solid #ffffff;
-  border-left: 5px solid #808080;
+  border-top: 5px solid #861be2;
+  border-right: 5px solid #43eb99;
+  border-bottom: 5px solid #43eb99;
+  border-left: 5px solid #861be2;
   height: 10vh;
   min-height: 100px;
   margin-bottom: 10px;
@@ -225,30 +225,30 @@ h1 {
 .game-status {
   width: 80px;
   height: 80px;
-  border-top: 4px solid #ffffff;
-  border-left: 4px solid #ffffff;
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
+  border-top: 4px solid #43eb99;
+  border-left: 4px solid #43eb99;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
   background-color: #efd819;
   background-image: url(../images/normal.png);
   background-size: cover;
 }
 
 .game-status:active {
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
-  border-top: 4px solid #808080;
-  border-left: 4px solid #808080;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
+  border-top: 4px solid #861be2;
+  border-left: 4px solid #861be2;
   transform: scale(0.85);
 }
 
 .game-status-died {
   width: 80px;
   height: 80px;
-  border-top: 4px solid #ffffff;
-  border-left: 4px solid #ffffff;
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
+  border-top: 4px solid #43eb99;
+  border-left: 4px solid #43eb99;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
   background-color: #efd819;
   background-image: url(../images/loose.png);
   background-size: cover;
@@ -256,10 +256,10 @@ h1 {
 }
 
 .game-status-died:active {
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
-  border-top: 4px solid #808080;
-  border-left: 4px solid #808080;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
+  border-top: 4px solid #861be2;
+  border-left: 4px solid #861be2;
   transform: scale(0.85);
 }
 
@@ -276,10 +276,10 @@ h1 {
 .game-status-win {
   width: 80px;
   height: 80px;
-  border-top: 4px solid #ffffff;
-  border-left: 4px solid #ffffff;
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
+  border-top: 4px solid #43eb99;
+  border-left: 4px solid #43eb99;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
   background-color: #efd819;
   background-image: url(../images/win.png);
   background-size: cover;
@@ -287,10 +287,10 @@ h1 {
 }
 
 .game-status-win:active {
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
-  border-top: 4px solid #808080;
-  border-left: 4px solid #808080;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
+  border-top: 4px solid #861be2;
+  border-left: 4px solid #861be2;
   transform: scale(0.85);
 }
 
@@ -326,27 +326,27 @@ h1 {
 .settings {
   width: 60px;
   height: 60px;
-  border-top: 4px solid #ffffff;
-  border-left: 4px solid #ffffff;
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
+  border-top: 4px solid #43eb99;
+  border-left: 4px solid #43eb99;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
   background-image: url(../images/settings.svg);
   background-size: cover;
 }
 
 .settings:active {
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
-  border-top: 4px solid #808080;
-  border-left: 4px solid #808080;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
+  border-top: 4px solid #861be2;
+  border-left: 4px solid #861be2;
   transform: scale(0.85);
 }
 
 .field {
-  border-top: 5px solid #808080;
-  border-right: 5px solid #ffffff;
-  border-bottom: 5px solid #ffffff;
-  border-left: 5px solid #808080;
+  border-top: 5px solid #861be2;
+  border-right: 5px solid #43eb99;
+  border-bottom: 5px solid #43eb99;
+  border-left: 5px solid #861be2;
   height: 50vh;
   min-height: 400px;
   max-height: 570px;
@@ -358,10 +358,10 @@ h1 {
 }
 
 .cell {
-  border-top: 4px solid #ffffff;
-  border-left: 4px solid #ffffff;
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
+  border-top: 4px solid #43eb99;
+  border-left: 4px solid #43eb99;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
   width: 100%;
   height: 100%;
   background-color: #c6c6c6;
@@ -507,10 +507,10 @@ h1 {
 }
 
 .cell-flag {
-  border-top: 4px solid #ffffff;
-  border-left: 4px solid #ffffff;
-  border-bottom: 4px solid #808080;
-  border-right: 4px solid #808080;
+  border-top: 4px solid #43eb99;
+  border-left: 4px solid #43eb99;
+  border-bottom: 4px solid #861be2;
+  border-right: 4px solid #861be2;
   overflow: hidden;
   width: 100%;
   height: 100%;
