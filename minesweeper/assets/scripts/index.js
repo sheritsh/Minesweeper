@@ -61,6 +61,7 @@ class MinesweeperGame {
     this.isInitialized = false;
     this.isSound = true;
     this.isSettingsOpen = false;
+    this.isGreeted = false;
     this.initializeArray();
     // generate initial page elements
     this.gameBoard = document.createElement('div');
@@ -85,6 +86,8 @@ class MinesweeperGame {
     this.settingsDisplay.classList.add('settings');
     this.gameField = document.createElement('div');
     this.gameField.classList.add('field');
+    this.historyRecords = document.createElement('div');
+    this.historyRecords.classList.add('history-records');
     //side menu
     this.settingsPanel = document.createElement('div');
     this.settingsPanel.classList.add('settings-panel');
@@ -119,8 +122,22 @@ class MinesweeperGame {
     });
     this.gameHeader.append(this.timerDisplay);
     this.gameBoard.append(this.gameField);
+    this.fillHistoryRecords();
+    domElement.append(this.historyRecords);
     this.fillField();
     this.eventHandlers();
+  }
+
+  fillHistoryRecords() {
+    this.historyRecords.innerHTML = '';
+    this.historyRecords.innerHTML += '<h2>Last results:</h2>';
+    for (let i = 1; i <= 10; i++) {
+      if (localStorage.getItem('save' + i)) {
+        this.historyRecords.innerHTML +=
+          i.toString() + '. ' + localStorage.getItem('save' + i) + '<br>';
+      } else {
+      }
+    }
   }
 
   createTimer() {
@@ -138,25 +155,19 @@ class MinesweeperGame {
       arr.fill('0');
       this.gameArray.push(arr);
     }
-    console.log(this.gameArray);
   }
 
   getNeigborsBombsCount(cellId) {
-    // console.log('le petite: ' + cellId);
     const cellColumn = Math.floor(cellId % this.x_size);
     const cellRow = Math.floor(cellId / this.x_size);
     let bombsAroundCounter = 0;
-
-    // console.log('Search for Y: ' + cellRow + ' X: ' + cellColumn);
 
     for (let i = cellRow - 1; i <= cellRow + 1; i++) {
       if (i < 0 || i > this.y_size - 1) continue;
       for (let j = cellColumn - 1; j <= cellColumn + 1; j++) {
         if (j < 0 || j > this.x_size - 1) continue;
         if (i === cellRow && j === cellColumn) continue;
-        // console.log('Search for Y: ' + i + ' X: ' + j);
         if (this.gameArray[i][j] === 'b') {
-          // console.log('OPANA' + i + ' I ' + j);
           bombsAroundCounter++;
         }
       }
@@ -189,7 +200,6 @@ class MinesweeperGame {
   }
 
   revealCell(id, event) {
-    console.log(id);
     let clickedCell;
     if (id === null) {
       clickedCell = event.target;
@@ -334,7 +344,6 @@ class MinesweeperGame {
           !curCell.classList.contains('cell-flag')
         ) {
           this.revealCell((i * this.x_size + j).toString());
-          console.log('revealed-');
         }
       }
     }
@@ -375,7 +384,6 @@ class MinesweeperGame {
           }
           this.updateState();
         }
-        // TO DO: function to handle flag placement
       });
 
       this.gameField.append(cell);
@@ -392,8 +400,6 @@ class MinesweeperGame {
     while (unplacedBombs) {
       let randXInt = getRandInt(0, this.x_size - 1);
       let randYInt = getRandInt(0, this.y_size - 1);
-      console.log('Y: ' + randYInt + ' X: ' + randXInt);
-      console.log(this.gameArray[randYInt][randXInt]);
       if (
         this.gameArray[randYInt][randXInt] !== 'b' &&
         (randYInt !== clickedCellRow || randXInt !== clickedCellColumn)
@@ -402,8 +408,6 @@ class MinesweeperGame {
         unplacedBombs--;
       }
     }
-
-    console.log(this.gameArray);
   }
 
   newGame() {
@@ -415,6 +419,7 @@ class MinesweeperGame {
     this.bombsLeftCounter = this.bombsAmount;
     this.gameArray = [];
     this.isInitialized = false;
+    this.isGreeted = false;
     this.gameSize = this.x_size * this.y_size;
     this.initializeArray();
     this.gameField.innerHTML = '';
@@ -423,6 +428,7 @@ class MinesweeperGame {
     this.gameStatusDisplay.classList.remove('game-status-win');
     this.gameStatusDisplay.classList.add('game-status');
     this.timerDisplay.innerHTML = '0';
+    this.fillHistoryRecords();
     this.updateState();
   }
 
@@ -446,18 +452,54 @@ class MinesweeperGame {
 
     this.placedFlags = placedFlagsCounter;
     this.bombsLeftCounter = this.bombsAmount - this.placedFlags;
-    if (clickedToWin === 0) {
-      this.gameWin();
+    if (clickedToWin === 0 && !this.isGreeted && this.isPlayable) {
+      setTimeout(() => {
+        this.gameWin();
+      }, 200);
     } else {
       this.updateState();
     }
   }
 
   gameWin() {
-    winSound(this.isSound);
-    this.isPlayable = false;
-    this.gameStatusDisplay.classList.remove('game-status');
-    this.gameStatusDisplay.classList.add('game-status-win');
+    if (!this.isGreeted) {
+      this.isGreeted = true;
+      winSound(this.isSound);
+      this.isPlayable = false;
+      this.gameStatusDisplay.classList.remove('game-status');
+      this.gameStatusDisplay.classList.add('game-status-win');
+      this.saveResult();
+    }
+  }
+
+  saveResult() {
+    let isSaved = false;
+    for (let i = 1; i <= 10 && !isSaved; i++) {
+      if (i === 10) {
+        for (let j = 0; j < 10; j++) {
+          localStorage.setItem('save' + j, localStorage.getItem('save' + (j + 1)));
+        }
+        localStorage.removeItem('save' + 10);
+      }
+      if (!localStorage.getItem('save' + i)) {
+        localStorage.setItem(
+          'save' + i,
+          'Win - ' +
+            this.x_size.toString() +
+            'x' +
+            this.x_size.toString() +
+            ' - ' +
+            this.bombsAmount.toString() +
+            ' mines - ' +
+            this.turnsCounter.toString() +
+            ' turns - ' +
+            this.timerCounter.toString() +
+            ' sec.'
+        );
+        isSaved = true;
+        console.log('zalupkotest');
+      }
+    }
   }
 
   gameOver() {
@@ -480,6 +522,7 @@ class MinesweeperGame {
 
   eventHandlers() {
     const soundbar = document.querySelector('.sound-panel');
+    const historyPanel = document.querySelector('.history-panel');
 
     this.settingsPanel.addEventListener('click', (event) => {
       this.settingsHandler(0);
@@ -490,6 +533,9 @@ class MinesweeperGame {
     });
     soundbar.onclick = () => {
       this.soundHandler();
+    };
+    historyPanel.onclick = () => {
+      this.historyRecords.classList.toggle('show');
     };
   }
 
@@ -520,6 +566,16 @@ class MinesweeperGame {
   applySettings() {
     const mine = document.querySelector('#mine');
     const diff = document.querySelector('input[name="diff"]:checked');
+    const theme = document.querySelector('input[name="theme"]:checked');
+    const lightTheme = document.getElementById('style');
+    const darkTheme = document.getElementById('dark-style');
+    if (theme.value === 'light') {
+      lightTheme.disabled = false;
+      darkTheme.disabled = true;
+    } else {
+      lightTheme.disabled = true;
+      darkTheme.disabled = false;
+    }
     this.setDifficulty(diff.value);
     this.bombsAmount = mine.value;
     this.newGame();
@@ -554,8 +610,6 @@ document.body.append(gameWrapper);
 const gameTitle = document.createElement('h1');
 gameTitle.textContent = 'Minesweeper';
 gameWrapper.append(gameTitle);
-
-// game.fillField();
 
 window.onload = function () {
   const game = new MinesweeperGame(gameWrapper);

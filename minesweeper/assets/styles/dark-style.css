@@ -46,7 +46,7 @@ html {
 }
 
 body {
-  background-color: #eaecf3;
+  background-color: #151d27;
 }
 
 h1 {
@@ -54,6 +54,7 @@ h1 {
   font-size: 28px;
   margin-bottom: 30px;
   margin: 30px 30px;
+  color: white;
 }
 
 .footer {
@@ -65,6 +66,7 @@ h1 {
   /* transform: translateX(-50%); */
   margin-top: 50px;
   line-height: 130%;
+  color: white;
 }
 
 .board {
@@ -86,6 +88,7 @@ h1 {
 .settings-panel {
   width: 50px;
   height: 50px;
+  background-color: rgba(255, 255, 255, 0.586);
   background-image: url(../images/settings.svg);
   background-size: cover;
   position: absolute;
@@ -96,6 +99,7 @@ h1 {
 .history-panel {
   width: 50px;
   height: 50px;
+  background-color: rgba(255, 255, 255, 0.586);
   background-image: url(../images/history.svg);
   background-size: cover;
   position: absolute;
@@ -104,12 +108,13 @@ h1 {
 }
 
 .save-panel {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.586);
   background-image: url(../images/save.svg);
   background-size: cover;
   position: absolute;
-  right: -50px;
+  right: -55px;
   top: 136px;
 }
 
@@ -516,7 +521,7 @@ h1 {
 
 .history-records {
   display: none;
-  background-color: #c6c6c675;
+  background-color: #ffffffa1;
   border-radius: 15px;
   width: 80vw;
   max-width: 650px;
