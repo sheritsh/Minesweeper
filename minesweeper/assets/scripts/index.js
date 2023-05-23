@@ -497,7 +497,6 @@ class MinesweeperGame {
             ' sec.'
         );
         isSaved = true;
-        console.log('zalupkotest');
       }
     }
   }
@@ -627,4 +626,9 @@ window.onload = function () {
   footer.innerHTML =
     '// created by <a href="https://github.com/sheritsh">sheritsh</a> for <a href="https://rs.school/">RS School</a><br>© 2023';
   document.body.append(footer);
+
+  const lightTheme = document.getElementById('style');
+  const darkTheme = document.getElementById('dark-style');
+  lightTheme.disabled = false;
+  darkTheme.disabled = true;
 };

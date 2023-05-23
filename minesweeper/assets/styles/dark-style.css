@@ -544,8 +544,53 @@ h2 {
 
 /* MINESWEEPER ELEMENTS END */
 
-/* @media (max-height: 800px) {
-  .footer {
-    display: none;
+@media (max-width: 400px) {
+  .mines-left {
+    max-width: 30px;
   }
-} */
+  .flags-placed {
+    max-width: 30px;
+  }
+  .moves-counter {
+    max-width: 30px;
+  }
+  .game-status {
+    max-width: 80px;
+  }
+  .timer {
+    max-width: 50px;
+    font-size: 20px;
+    line-height: 30px;
+  }
+
+  .timer::before {
+    line-height: normal;
+  }
+
+  .settings-panel {
+    max-width: 30px;
+    right: -35px;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  .history-panel {
+    max-width: 30px;
+    right: -35px;
+    top: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  .save-panel {
+    max-width: 30px;
+    right: -35px;
+    top: 105px;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  .settings-menu {
+    font-size: 18px;
+  }
+}
