@@ -60,6 +60,7 @@ class MinesweeperGame {
     this.isPlayable = true;
     this.isInitialized = false;
     this.isSound = true;
+    this.isSettingsOpen = false;
     this.initializeArray();
     // generate initial page elements
     this.gameBoard = document.createElement('div');
@@ -84,10 +85,30 @@ class MinesweeperGame {
     this.settingsDisplay.classList.add('settings');
     this.gameField = document.createElement('div');
     this.gameField.classList.add('field');
+    //side menu
+    this.settingsPanel = document.createElement('div');
+    this.settingsPanel.classList.add('settings-panel');
+    this.settingsMenu = document.createElement('div');
+    this.settingsMenu.classList.add('settings-menu');
+    this.historyPanel = document.createElement('div');
+    this.historyPanel.classList.add('history-panel');
+    this.savePanel = document.createElement('div');
+    this.savePanel.classList.add('save-panel');
 
     //
     domElement.append(this.gameBoard);
     this.gameBoard.append(this.gameHeader);
+    this.gameBoard.append(this.settingsPanel);
+    this.gameBoard.append(this.settingsMenu);
+    this.settingsMenu.innerHTML =
+      '<fieldset><legend>Select difficulty:</legend><div><input type="radio" id="easy" name="diff" value="easy"checked><label for="easy">Easy (10x10)</label></div><div><input type="radio" id="medium" name="diff" value="medium"><label for="medium">Medium (15x15)</label></div><div><input type="radio" id="hard" name="diff" value="hard"><label for="hard">Hard (25x25)</label></div></fieldset><div class="sound-panel"></div>';
+    this.settingsMenu.innerHTML +=
+      '<label for="price">Choose a maximum bombs amount: </label><input type="range" name="mine" id="mine" min="1" max="99" step="1" value="10" /><output class="mine-output" for="mine"></output>';
+    this.settingsMenu.innerHTML +=
+      '<br><br><fieldset><legend>Select theme:</legend><div><input type="radio" id="light" name="theme" value="light"checked><label for="light">Light</label></div><div><input type="radio" id="dark" name="theme" value="dark"><label for="dark">Dark</label></div></fieldset>';
+    this.settingsMenu.innerHTML += '<br><button class="btn-apply">Apply</button>';
+    this.gameBoard.append(this.historyPanel);
+    this.gameBoard.append(this.savePanel);
     this.gameHeader.append(this.minesLeftDisplay);
     this.gameHeader.append(this.flagsPlacedDisplay);
 
@@ -99,6 +120,7 @@ class MinesweeperGame {
     this.gameHeader.append(this.timerDisplay);
     this.gameBoard.append(this.gameField);
     this.fillField();
+    this.eventHandlers();
   }
 
   createTimer() {
@@ -120,7 +142,7 @@ class MinesweeperGame {
   }
 
   getNeigborsBombsCount(cellId) {
-    console.log(cellId);
+    // console.log('le petite: ' + cellId);
     const cellColumn = Math.floor(cellId % this.x_size);
     const cellRow = Math.floor(cellId / this.x_size);
     let bombsAroundCounter = 0;
@@ -134,6 +156,7 @@ class MinesweeperGame {
         if (i === cellRow && j === cellColumn) continue;
         // console.log('Search for Y: ' + i + ' X: ' + j);
         if (this.gameArray[i][j] === 'b') {
+          // console.log('OPANA' + i + ' I ' + j);
           bombsAroundCounter++;
         }
       }
@@ -174,23 +197,30 @@ class MinesweeperGame {
       clickedCell = document.getElementById(id.toString());
     }
 
+    const clickedCellId = clickedCell.getAttribute('id');
+    const cellColumn = Math.floor(clickedCellId % this.x_size);
+    const cellRow = Math.floor(clickedCellId / this.x_size);
+
     if (!this.isInitialized) {
       this.generateGameAray(clickedCell);
       this.isInitialized = true;
     }
 
     // if (clickedCell.classList.contains('cell-flag')) return;
-    if (event && !clickedCell.classList.contains('cell-clicked')) {
-      this.turnsCounter++;
-      if (id === null) {
-        setTimeout(() => {
-          if (this.isPlayable) clickSound(this.isSound);
-        }, 50);
+    //  cut from below: && !clickedCell.classList.contains('cell-clicked')
+    if (event) {
+      if (this.isInitialized && this.countFlagsAround(clickedCellId) >= 1) {
+        this.openEnvironment(clickedCell, clickedCellId);
+      }
+      if (!clickedCell.classList.contains('cell-clicked')) {
+        this.turnsCounter++;
+        if (id === null) {
+          setTimeout(() => {
+            if (this.isPlayable) clickSound(this.isSound);
+          }, 50);
+        }
       }
     }
-    const clickedCellId = clickedCell.getAttribute('id');
-    const cellColumn = Math.floor(clickedCellId % this.x_size);
-    const cellRow = Math.floor(clickedCellId / this.x_size);
 
     if (this.gameArray[cellRow][cellColumn] === 'b') {
       clickedCell.classList.add('cell-bomb');
@@ -198,7 +228,7 @@ class MinesweeperGame {
       this.gameOver();
       clickedCell.style.backgroundColor = 'red';
     } else {
-      // clickedCell.classList.add('cell-clicked');
+      // TO DO: REVEAL WHOLE NIGHBORS
       const bombsAroundConter = this.getNeigborsBombsCount(clickedCellId);
       if (bombsAroundConter > 0) {
         clickedCell.classList.remove('cell-flag');
@@ -241,6 +271,75 @@ class MinesweeperGame {
     this.checkEnd();
   }
 
+  openEnvironment(clickedCell, cellId) {
+    let needFlagsAround = 0;
+    let flagsAround = this.countFlagsAround(cellId); // TO-DO: method to count flags around;
+    if (clickedCell.classList.length > 1) {
+      if (clickedCell.classList.contains('cell-one')) {
+        needFlagsAround = 1;
+      } else if (clickedCell.classList.contains('cell-two')) {
+        needFlagsAround = 2;
+      } else if (clickedCell.classList.contains('cell-three')) {
+        needFlagsAround = 3;
+      } else if (clickedCell.classList.contains('cell-four')) {
+        needFlagsAround = 4;
+      } else if (clickedCell.classList.contains('cell-five')) {
+        needFlagsAround = 5;
+      } else if (clickedCell.classList.contains('cell-six')) {
+        needFlagsAround = 6;
+      } else if (clickedCell.classList.contains('cell-seven')) {
+        needFlagsAround = 7;
+      } else if (clickedCell.classList.contains('cell-eight')) {
+        needFlagsAround = 8;
+      }
+    }
+    if (needFlagsAround === flagsAround) {
+      this.revealAround(cellId);
+      this.turnsCounter++;
+    }
+  }
+
+  countFlagsAround(cellId) {
+    let flagsAround = 0;
+    const cellColumn = Math.floor(cellId % this.x_size);
+    const cellRow = Math.floor(cellId / this.x_size);
+
+    for (let i = cellRow - 1; i <= cellRow + 1; i++) {
+      if (i < 0 || i > this.y_size - 1) continue;
+      for (let j = cellColumn - 1; j <= cellColumn + 1; j++) {
+        if (j < 0 || j > this.x_size - 1) continue;
+        if (i === cellRow && j === cellColumn) continue;
+        const curCell = document.getElementById((i * this.x_size + j).toString());
+        if (curCell.classList.contains('cell-flag')) {
+          flagsAround++;
+        }
+      }
+    }
+
+    return flagsAround;
+  }
+
+  revealAround(cellId) {
+    const cellColumn = Math.floor(cellId % this.x_size);
+    const cellRow = Math.floor(cellId / this.x_size);
+
+    for (let i = cellRow - 1; i <= cellRow + 1; i++) {
+      if (i < 0 || i > this.y_size - 1) continue;
+      for (let j = cellColumn - 1; j <= cellColumn + 1; j++) {
+        if (j < 0 || j > this.x_size - 1) continue;
+        if (i === cellRow && j === cellColumn) continue;
+        const curCell = document.getElementById((i * this.x_size + j).toString());
+        if (
+          !curCell.classList.contains('cell-clicked') &&
+          !curCell.classList.contains('cell-flag')
+        ) {
+          this.revealCell((i * this.x_size + j).toString());
+          console.log('revealed-');
+        }
+      }
+    }
+  }
+
   updateState() {
     this.minesLeftDisplay.innerHTML = this.bombsLeftCounter;
     this.flagsPlacedDisplay.innerHTML = this.bombsAmount - this.bombsLeftCounter;
@@ -260,6 +359,11 @@ class MinesweeperGame {
       cell.addEventListener('contextmenu', (event) => {
         event.preventDefault();
         if (!cell.classList.contains('cell-clicked') && this.isPlayable) {
+          if (!this.isInitialized) {
+            this.generateGameAray(cell);
+            this.isInitialized = true;
+          }
+
           cell.classList.toggle('cell-flag');
           cell.classList.toggle('cell');
           if (cell.classList.contains('cell-flag')) {
@@ -311,6 +415,7 @@ class MinesweeperGame {
     this.bombsLeftCounter = this.bombsAmount;
     this.gameArray = [];
     this.isInitialized = false;
+    this.gameSize = this.x_size * this.y_size;
     this.initializeArray();
     this.gameField.innerHTML = '';
     this.fillField();
@@ -324,7 +429,6 @@ class MinesweeperGame {
   checkEnd() {
     let clickedToWin = this.gameSize - this.bombsAmount;
     let placedFlagsCounter = 0;
-    console.log('To win: ' + clickedToWin);
 
     for (let i = 0; i < this.y_size; i++) {
       for (let j = 0; j < this.x_size; j++) {
@@ -339,7 +443,7 @@ class MinesweeperGame {
         }
       }
     }
-    console.log('now to win: ' + clickedToWin);
+
     this.placedFlags = placedFlagsCounter;
     this.bombsLeftCounter = this.bombsAmount - this.placedFlags;
     if (clickedToWin === 0) {
@@ -373,6 +477,75 @@ class MinesweeperGame {
       }
     }
   }
+
+  eventHandlers() {
+    const soundbar = document.querySelector('.sound-panel');
+
+    this.settingsPanel.addEventListener('click', (event) => {
+      this.settingsHandler(0);
+    });
+    const btnApply = document.querySelector('.btn-apply');
+    btnApply.addEventListener('click', (event) => {
+      this.settingsHandler(1);
+    });
+    soundbar.onclick = () => {
+      this.soundHandler();
+    };
+  }
+
+  soundHandler() {
+    const soundbar = document.querySelector('.sound-panel');
+    if (this.isSound) {
+      soundbar.style.backgroundImage = 'url(assets/images/sound-off.svg)';
+      this.isSound = false;
+    } else {
+      soundbar.style.backgroundImage = 'url(assets/images/sound-on.svg)';
+      this.isSound = true;
+    }
+  }
+
+  settingsHandler(force) {
+    if (!this.isSettingsOpen) {
+      this.settingsMenu.style.display = 'block';
+      this.isSettingsOpen = true;
+    } else {
+      this.settingsMenu.style.display = 'none';
+      if (force) {
+        this.applySettings();
+      }
+      this.isSettingsOpen = false;
+    }
+  }
+
+  applySettings() {
+    const mine = document.querySelector('#mine');
+    const diff = document.querySelector('input[name="diff"]:checked');
+    this.setDifficulty(diff.value);
+    this.bombsAmount = mine.value;
+    this.newGame();
+  }
+
+  setDifficulty(val) {
+    if (val === 'easy') {
+      this.x_size = 10;
+      this.y_size = 10;
+      this.gameField.style.gridTemplateRows = 'repeat(10, 1fr)';
+      this.gameField.style.gridTemplateColumns = 'repeat(10, 1fr)';
+      this.gameField.style.fontSize = 'min(2vw, 32px)';
+    } else if (val === 'medium') {
+      this.x_size = 15;
+      this.y_size = 15;
+      this.gameField.style.gridTemplateRows = 'repeat(15, 1fr)';
+      this.gameField.style.gridTemplateColumns = 'repeat(15, 1fr)';
+      this.gameField.style.fontSize = 'min(2vw, 18px)';
+    } else if (val === 'hard') {
+      this.x_size = 25;
+      this.y_size = 25;
+      this.gameField.style.gridTemplateRows = 'repeat(25, 1fr)';
+      this.gameField.style.gridTemplateColumns = 'repeat(25, 1fr)';
+      this.gameField.style.fontSize = 'min(2vw, 12px)';
+    }
+  }
 }
 
 const gameWrapper = document.createElement('div');
@@ -382,5 +555,22 @@ const gameTitle = document.createElement('h1');
 gameTitle.textContent = 'Minesweeper';
 gameWrapper.append(gameTitle);
 
-const game = new MinesweeperGame(gameWrapper);
 // game.fillField();
+
+window.onload = function () {
+  const game = new MinesweeperGame(gameWrapper);
+  const mine = document.querySelector('#mine');
+  const output = document.querySelector('.mine-output');
+
+  output.textContent = mine.value;
+
+  mine.addEventListener('input', () => {
+    output.textContent = mine.value;
+  });
+
+  const footer = document.createElement('div');
+  footer.classList.add('footer');
+  footer.innerHTML =
+    '// created by <a href="https://github.com/sheritsh">sheritsh</a> for <a href="https://rs.school/">RS School</a><br>© 2023';
+  document.body.append(footer);
+};
